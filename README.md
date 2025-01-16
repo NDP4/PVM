@@ -38,32 +38,47 @@ PVM adalah tools sederhana untuk mengelola multiple versi PHP di Arch Linux dan 
 - yay (AUR helper)
 - sudo privileges
 
-## Cara Instalasi
+## Installation
 
-### syarat sebelum instalasi
-
-pastikan berada di directory root
+You can install PVM easily with the following command:
 
 ```bash
-cd
+curl -o- https://raw.githubusercontent.com/NDP4/PVM/main/install.sh | bash
 ```
 
-### Metode 1: Instalasi User-level
+After installation, restart your terminal or run:
 
 ```bash
-git clone https://github.com/NDP4/PVM.git
-cd pvm
-./install-pvm.sh
 source ~/.bashrc
 ```
 
-### Metode 2: Instalasi System-wide
+To verify the installation, run:
 
 ```bash
-git clone https://github.com/NDP4/PVM.git
-cd pvm
-sudo ./setup-pvm.sh
+pvm --version
 ```
+
+## Manual Installation
+
+If you prefer to install manually:
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/NDP4/PVM.git
+   cd PVM
+   ```
+
+2. Run the installation script:
+
+   ```bash
+   ./install.sh
+   ```
+
+3. Restart your terminal or run:
+   ```bash
+   source ~/.bashrc
+   ```
 
 ## Cara Uninstall PVM
 
