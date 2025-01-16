@@ -96,6 +96,16 @@ If you prefer to install manually:
    source ~/.bashrc
    ```
 
+After installation, restart your terminal or run:
+
+```bash
+# For Bash users
+source ~/.bashrc
+
+# For Zsh users
+source ~/.zshrc
+```
+
 ## Cara Uninstall PVM
 
 ### Metode 1: User-level Uninstall
@@ -281,6 +291,10 @@ Building PHP 8.2 from source...
 | Kustomisasi       | Terbatas          | Fleksibel           |
 | Maintenance       | Otomatis (pacman) | Manual              |
 | Resource CPU      | Minimal           | Tinggi (saat build) |
+
+## Supported Shells
+
+PVM now supports both Bash and Zsh. The installation script automatically adds the necessary configuration to both `.bashrc` and `.zshrc` files if they exist.
 
 ## Troubleshooting
 

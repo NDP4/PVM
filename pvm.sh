@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Konfigurasi
 PVM_DIR="$HOME/.pvm"
@@ -47,6 +47,11 @@ init_pvm() {
 
     # Setup extensions config
     load_extensions_config
+
+    # Add support for Zsh
+    if [ -n "$ZSH_VERSION" ]; then
+        autoload -U +X bashcompinit && bashcompinit
+    fi
 }
 
 # Enhanced PHP detection function
@@ -410,7 +415,7 @@ install_php_from_aur() {
 # Load extensions configuration
 load_extensions_config() {
     local config_file="$PVM_DIR/config/extensions.conf"
-    local default_config="$(dirname "$(readlink -f "$0")")/config/extensions.conf"
+    local default_config="${0%/*}/config/extensions.conf"
     
     # Create config directory if not exists
     mkdir -p "$PVM_DIR/config"

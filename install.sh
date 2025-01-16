@@ -16,13 +16,26 @@ install_pvm() {
     # Create symlink
     sudo ln -sf "$PVM_DIR/pvm" /usr/local/bin/pvm
 
-    # Add PVM to PATH if not already present
-    if ! grep -q 'export PATH="$HOME/.pvm:$PATH"' "$HOME/.bashrc"; then
-        echo 'export PATH="$HOME/.pvm:$PATH"' >> "$HOME/.bashrc"
-    fi
+    # Add PVM to PATH for both Bash and Zsh
+    add_to_shell_config "$HOME/.bashrc"
+    add_to_shell_config "$HOME/.zshrc"
 
     echo "PVM has been installed successfully!"
-    echo "Please restart your terminal or run 'source ~/.bashrc' to start using PVM."
+    echo "Please restart your terminal or run 'source ~/.bashrc' (for Bash) or 'source ~/.zshrc' (for Zsh) to start using PVM."
+}
+
+# Function to add PVM to shell configuration
+add_to_shell_config() {
+    local config_file="$1"
+    if [ -f "$config_file" ]; then
+        if ! grep -q 'export PATH="$HOME/.pvm:$PATH"' "$config_file"; then
+            echo 'export PATH="$HOME/.pvm:$PATH"' >> "$config_file"
+            echo "PVM added to $config_file"
+        fi
+    else
+        echo 'export PATH="$HOME/.pvm:$PATH"' > "$config_file"
+        echo "Created $config_file with PVM configuration"
+    fi
 }
 
 # Run the installation
