@@ -38,7 +38,8 @@ PVM adalah tools sederhana untuk mengelola multiple versi PHP di Arch Linux dan 
 
 ```bash
 git clone https://github.com/NDP4/PVM.git
-cd pvm
+cd PVM
+chmod +x install-pvm.sh
 ./install-pvm.sh
 source ~/.bashrc
 ```
@@ -47,7 +48,8 @@ source ~/.bashrc
 
 ```bash
 git clone https://github.com/NDP4/PVM.git
-cd pvm
+cd PVM
+chmod +x setup-pvm.sh
 sudo ./setup-pvm.sh
 ```
 
@@ -205,6 +207,7 @@ pvm install 82  # Ganti dengan versi yang diinginkan
 PVM menyediakan dua metode instalasi PHP:
 
 1. **AUR (Arch User Repository)**
+
    - Menggunakan package yang tersedia di AUR
    - Lebih mudah dan terintegrasi dengan sistem
    - Instalasi bisa lebih lama karena proses build di AUR
@@ -228,13 +231,13 @@ Building PHP 8.2 from source...
 
 ### Perbandingan Metode Instalasi
 
-| Fitur                  | AUR               | Source             |
-|-----------------------|-------------------|-------------------|
-| Kecepatan Install     | Lebih lambat     | Lebih cepat      |
-| Integrasi Sistem      | Lebih baik       | Manual           |
-| Kustomisasi           | Terbatas         | Fleksibel        |
-| Maintenance           | Otomatis (pacman) | Manual           |
-| Resource CPU          | Minimal          | Tinggi (saat build) |
+| Fitur             | AUR               | Source              |
+| ----------------- | ----------------- | ------------------- |
+| Kecepatan Install | Lebih lambat      | Lebih cepat         |
+| Integrasi Sistem  | Lebih baik        | Manual              |
+| Kustomisasi       | Terbatas          | Fleksibel           |
+| Maintenance       | Otomatis (pacman) | Manual              |
+| Resource CPU      | Minimal           | Tinggi (saat build) |
 
 ## Troubleshooting
 
