@@ -264,9 +264,53 @@ uninstall_php() {
         return 1
     fi
 
-    yay -R "php$version" "php$version-fpm"
-    rm -f "$PVM_DIR/php$version"
-    echo "PHP $version uninstalled"
+    echo "Uninstalling PHP $version and its extensions..."
+    
+    # List semua package yang terkait dengan versi PHP ini
+    local php_packages=($(pacman -Qq | grep "php$version"))
+    
+    if [ ${#php_packages[@]} -eq 0 ]; then
+        echo "No PHP $version packages found"
+        return 0
+    fi
+
+    # Tampilkan package yang akan dihapus
+    echo "The following packages will be removed:"
+    printf '%s\n' "${php_packages[@]}"
+    
+    # Konfirmasi penghapusan
+    read -p "Do you want to continue? [y/N] " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "Operation cancelled"
+        return 1
+    fi
+
+    # Switch ke versi PHP lain jika yang dihapus adalah versi yang aktif
+    current_version=$(cat "$CURRENT_VERSION_FILE" 2>/dev/null)
+    if [ "$version" = "$current_version" ]; then
+        # Cari versi PHP lain yang terinstall
+        for other_version in $(detect_installed_php); do
+            if [ "$other_version" != "$version" ]; then
+                echo "Switching to PHP $other_version before uninstall..."
+                use_php "$other_version"
+                break
+            fi
+        done
+    fi
+
+    # Hapus semua package terkait
+    echo "Removing PHP $version packages..."
+    sudo pacman -Rdd "${php_packages[@]}" --noconfirm
+
+    # Bersihkan dependencies yang tidak digunakan
+    echo "Cleaning unused dependencies..."
+    sudo pacman -Rns $(pacman -Qtdq) --noconfirm 2>/dev/null || true
+
+    # Hapus file konfigurasi yang tersisa
+    sudo rm -rf "/etc/php$version" 2>/dev/null || true
+    
+    echo "PHP $version has been uninstalled successfully"
 }
 
 # Main command handler
