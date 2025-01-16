@@ -139,6 +139,103 @@ pvm clean-cache
 - openssl
 - ctype
 
+## Extensions PHP
+
+### Mode Instalasi Extensions
+
+0. **No Extensions** - Install PHP tanpa extensions tambahan
+1. **Default Extensions** - Menginstall semua extensions standar:
+   - gd, curl, pdo, mysql, zip, bcmath, sqlite, intl, mbstring, xml, dll
+2. **Custom Extensions** - Pilih extensions tambahan secara interaktif:
+   - ImageMagick (imagick)
+   - Redis (redis)
+   - Memcached (memcached)
+   - Xdebug (xdebug)
+   - MongoDB (mongodb)
+   - Swoole (swoole)
+   - YAML (yaml)
+   - gRPC (grpc)
+   - Protocol Buffers (protobuf)
+
+### Contoh Penggunaan
+
+```bash
+$ pvm install 82
+=== PHP Extensions Installation ===
+0) None  - Install PHP tanpa extensions
+1) Default - Install semua extensions default
+2) Custom - Pilih extensions tambahan
+Pilihan [0/1/2]: 0
+Melanjutkan tanpa install extensions...
+```
+
+## Konfigurasi Custom Extensions
+
+Anda dapat menambahkan custom PHP extensions dengan mengedit file konfigurasi:
+
+```bash
+vim ~/.pvm/config/extensions.conf
+```
+
+### Contoh konfigurasi extensions:
+
+```bash
+# Default extensions tetap ada di atas
+DEFAULT_EXTENSIONS=(
+    # ...existing default extensions...
+)
+
+# Tambahkan custom extensions yang diinginkan
+CUSTOM_EXTENSIONS=(
+    "imagick"    # Image processing
+    "redis"      # Redis support
+    "xdebug"     # Debugging
+    "memcached"  # Memcached support
+)
+```
+
+Setelah mengedit konfigurasi, install ulang PHP untuk menerapkan extensions baru:
+
+```bash
+pvm install 82  # Ganti dengan versi yang diinginkan
+```
+
+## Metode Instalasi PHP
+
+PVM menyediakan dua metode instalasi PHP:
+
+1. **AUR (Arch User Repository)**
+   - Menggunakan package yang tersedia di AUR
+   - Lebih mudah dan terintegrasi dengan sistem
+   - Instalasi bisa lebih lama karena proses build di AUR
+
+2. **Source (Build from source)**
+   - Download dan build dari sumber resmi PHP
+   - Proses build lebih cepat (menggunakan semua core CPU)
+   - Dapat dikustomisasi dengan flag compile tertentu
+   - Terinstall di /opt/php[version]
+
+### Contoh Penggunaan
+
+```bash
+$ pvm install 82
+=== PHP Installation Method ===
+1) AUR (Arch User Repository)
+2) Source (Build from official source)
+Choose installation method [1/2]: 2
+Building PHP 8.2 from source...
+```
+
+### Perbandingan Metode Instalasi
+
+| Fitur                  | AUR               | Source             |
+|-----------------------|-------------------|-------------------|
+| Kecepatan Install     | Lebih lambat     | Lebih cepat      |
+| Integrasi Sistem      | Lebih baik       | Manual           |
+| Kustomisasi           | Terbatas         | Fleksibel        |
+| Maintenance           | Otomatis (pacman) | Manual           |
+| Resource CPU          | Minimal          | Tinggi (saat build) |
+
 ## Troubleshooting
 
 ### 1. PHP tidak terinstall dengan benar
