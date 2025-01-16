@@ -114,16 +114,47 @@ build_php_from_source() {
         gmp tidyhtml openssl-1.1 sqlite autoconf automake curl re2c bison \
         libxslt icu gcc make pkg-config argon2 libsodium zlib
 
+    # Version-specific configurations
+    local extra_cflags=""
+    if [[ "${version:0:1}" -ge "8" && "${version:1:1}" -ge "2" ]]; then
+        # PHP 8.2+ needs special flags for atomic operations
+        extra_cflags="-DUSE_GCC_ATOMIC_BUILTINS -std=gnu11"
+    fi
+
     # Create build directory
     rm -rf "$build_dir"
     mkdir -p "$build_dir/patches"
     cd "$build_dir" || return 1
 
-    # Download source
-    echo "Downloading PHP ${major_version}..."
-    wget "https://www.php.net/distributions/php-${major_version}.33.tar.xz" || return 1
-    tar xf "php-${major_version}.33.tar.xz" || return 1
-    cd "php-${major_version}.33" || return 1
+    # Determine latest patch version based on major version
+    local latest_version
+    case "$major_version" in
+        "7.4")
+            latest_version="33"
+            ;;
+        "8.0")
+            latest_version="30"
+            ;;
+        "8.1")
+            latest_version="27"
+            ;;
+        "8.2")
+            latest_version="15"
+            ;;
+        "8.3")
+            latest_version="1"
+            ;;
+        *)
+            echo "Unsupported PHP version: $major_version"
+            return 1
+            ;;
+    esac
+
+    # Download source with correct version number
+    echo "Downloading PHP ${major_version}.${latest_version}..."
+    wget "https://www.php.net/distributions/php-${major_version}.${latest_version}.tar.xz" || return 1
+    tar xf "php-${major_version}.${latest_version}.tar.xz" || return 1
+    cd "php-${major_version}.${latest_version}" || return 1
 
     # Create patches
     echo "Creating patches..."
@@ -156,13 +187,21 @@ EOL
     # Apply patches
     echo "Applying patches..."
     patch -p1 < patches/001-libxml.patch || {
-        echo "Warning: Patch application failed, continuing anyway..."
+        echo "Warning: libxml patch application failed, continuing anyway..."
     }
+
+    # Directly edit zend_atomic.h for PHP 8.2+
+    if [[ "${version:0:1}" -ge "8" && "${version:1:1}" -ge "2" ]]; then
+        echo "Modifying zend_atomic.h for PHP 8.2+..."
+        sed -i 's/__c11_atomic_exchange/__atomic_exchange_n/g' Zend/zend_atomic.h
+        sed -i 's/__c11_atomic_load/__atomic_load_n/g' Zend/zend_atomic.h
+        sed -i 's/__c11_atomic_store/__atomic_store_n/g' Zend/zend_atomic.h
+        sed -i 's/__c11_atomic_init(/__atomic_store_n(/g' Zend/zend_atomic.h
+        sed -i 's/ZEND_ATOMIC_BOOL_INIT(obj, desired) __atomic_store_n(&(obj)->value, (desired))/ZEND_ATOMIC_BOOL_INIT(obj, desired) __atomic_store_n(\&(obj)->value, (desired), __ATOMIC_RELAXED)/' Zend/zend_atomic.h
+    fi
 
     # Configure build with specific settings for PHP 7.4
     echo "Configuring build..."
-    CFLAGS="-I/usr/include/libxml2" \
-    LDFLAGS="-L/usr/lib" \
     PKG_CONFIG_PATH="/usr/lib/openssl-1.1/pkgconfig" \
     ./configure \
         --prefix="/opt/php$version" \
@@ -635,7 +674,7 @@ uninstall_php() {
     fi
 
     # AUR uninstallation
-    if [ $is_aur -eq 1 ]; then
+    if [ $is_ur -eq 1 ]; then
         echo "Removing AUR packages..."
         local php_packages=($(pacman -Qq | grep "php${version}"))
         if [ ${#php_packages[@]} -gt 0 ]; then
