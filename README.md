@@ -2,6 +2,11 @@
 
 PVM adalah tools sederhana untuk mengelola multiple versi PHP di Arch Linux dan turunannya (Manjaro, EndeavourOS, dll). Tools ini dibuat untuk memudahkan developer PHP dalam mengganti versi PHP sesuai kebutuhan project.
 
+## Update v1
+
+- penambahan fitur metode instalasi PHP menggunakan source official repository
+- perbaikan bug fixes
+
 ## Fitur
 
 - 🚀 Instalasi PHP versi tertentu dengan satu perintah
@@ -18,11 +23,12 @@ PVM adalah tools sederhana untuk mengelola multiple versi PHP di Arch Linux dan 
 3. **Efisien**: Menggunakan parallel processing untuk mempercepat instalasi
 4. **Aman**: Manajemen sudo yang terkontrol dan timestamp-based
 5. **Terintegrasi**: Bekerja seamless dengan package manager sistem (yay/pacman)
+6. **Custom instalasi**: dapat memilih metode install package PHP baik menggunakan AUR atau official source
 
 ## Keterbatasan
 
 1. Hanya berjalan di Arch Linux dan turunannya
-2. Membutuhkan yay sebagai AUR helper
+2. Membutuhkan yay sebagai AUR helper bagi yang menggunakan metode instalasi menggunakan AUR
 3. Belum mendukung custom PHP extensions
 4. Tidak bisa menginstall versi PHP yang tidak tersedia di repositori
 
@@ -34,12 +40,19 @@ PVM adalah tools sederhana untuk mengelola multiple versi PHP di Arch Linux dan 
 
 ## Cara Instalasi
 
+### syarat sebelum instalasi
+
+pastikan berada di directory root
+
+```bash
+cd
+```
+
 ### Metode 1: Instalasi User-level
 
 ```bash
 git clone https://github.com/NDP4/PVM.git
-cd PVM
-chmod +x install-pvm.sh
+cd pvm
 ./install-pvm.sh
 source ~/.bashrc
 ```
@@ -48,8 +61,7 @@ source ~/.bashrc
 
 ```bash
 git clone https://github.com/NDP4/PVM.git
-cd PVM
-chmod +x setup-pvm.sh
+cd pvm
 sudo ./setup-pvm.sh
 ```
 
