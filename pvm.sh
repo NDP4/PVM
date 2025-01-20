@@ -227,12 +227,12 @@ EOL
         --with-sqlite3 \
         --with-zlib \
         --with-zip \
-        --without-libxml \
-        --disable-dom \
-        --disable-xml \
-        --disable-xmlreader \
-        --disable-xmlwriter \
-        --disable-simplexml \
+        --with-libxml \
+        --enable-dom \
+        --enable-xml \
+        --enable-xmlreader \
+        --enable-xmlwriter \
+        --enable-simplexml \
         --with-sodium \
         || {
             echo "Configure failed"
